@@ -10,7 +10,7 @@
 int photodiodePin = A0;
 int tempPin = A1;
 int heaterPin = 13;
-long waittimehundredths    = ((long)SAMPLETIME - (long)NUMLEDS * (long)LEDON)*(long)1000;
+long waittimehundredths    = ((long)SAMPLETIME - (long)NUMLEDS * (long)LEDON)*(long)100;
 
 // we run temperature management constantly, 100 times a second, and every waittimehundredths cycles we record LED status
 
@@ -42,7 +42,7 @@ void loop() {
       adcSum += float(analogRead(photodiodePin));
     }
     adcSum /= NUMSAMPLES;
-    
+
     Serial.print(String(5*adcSum/1023));
     if (lednum < NUMLEDS-1) Serial.print(",");
     digitalWrite(lednum+2, HIGH);
@@ -51,8 +51,8 @@ void loop() {
   // turning LEDs on
   for (int lednum = 0; lednum < NUMLEDS; lednum++) {
     digitalWrite(lednum+2, LOW);
-  }  
-  
+  }
+
   delayWithTemp(waittimehundredths);
 
 }
