@@ -11,7 +11,7 @@ class ArduinoInterface:
 
     def update(self):
         '''
-        expect line to be 'temp, voltage_0, voltage_2, ... voltage_7'
+        expect line to be 'temp, PD cal intensity, 5V cal voltage, voltage_0, voltage_2, ... voltage_7'
         '''
 
         data = self.port.readline()
@@ -20,7 +20,7 @@ class ArduinoInterface:
         try:
             datastring = data[0:len(data)-2].decode('utf-8')
             voltages = datastring.split(",")
-            if len(voltages) != self.num_leds+1: return 0
+            if len(voltages) != self.num_leds+3: return 0
             led_status = []
             for i in range(len(voltages)+1):
                 led_status.append([i, float(voltages[i])])
