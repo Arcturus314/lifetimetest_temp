@@ -20,9 +20,10 @@ class ArduinoInterface:
         try:
             datastring = data[0:len(data)-2].decode('utf-8')
             voltages = datastring.split(",")
+            voltages.remove('')
             if len(voltages) != self.num_leds+3: return 0
             led_status = []
-            for i in range(len(voltages)+1):
+            for i in range(len(voltages)):
                 led_status.append([i, float(voltages[i])])
             return led_status
         except:

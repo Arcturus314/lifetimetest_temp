@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-class TempModel:
+class DataModel:
 
     def __init__(self, log_file):
         self.log_file = log+file
