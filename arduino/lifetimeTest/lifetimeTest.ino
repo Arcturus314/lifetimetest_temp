@@ -7,17 +7,17 @@
 // temperature control parameters
 #define TEMP_NUMTOAVERAGE 10     // average 10 temp meas
 #define TEMP_DELAYBETWEENMEAS 10 // ms
-#define TEMP_PROPGAIN 20         // proportional control term with gain of 20
+#define TEMP_PROPGAIN 40         // proportional control term with gain of 20
 #define TEMP_ALLOWEDERR 3             // accurate within ALLOWEDER degrees
-#define TEMP_DESTEMP 80              // desirded temperature for LEDs
+#define TEMP_DESTEMP 103              // desirded temperature for LEDs
 // lifetime control parameters
 #define LED_LEDON 1000         // num ms to keep LED on during sampling
 #define LED_SAMPLEPERIOD 60000 // num ms for total sample period (sample all LEDs -> turn off all LEDs -> wait)
 #define LED_NUMLEDS 8          // num LEDs to test
 #define LED_NUMSAMPLES 10      // num analog samples to take for each LED
 
-// pinout
-int LEDPins[]          = {2,3,4,5,6,7,8,9}; // leds connected to these pins. {CH1, CH2, ...}
+// pinoute
+int LEDPins[]          = {9,8,7,6,5,4,3,2}; // leds connected to these pins. {CH1, CH2, ...}
 #define heaterPin        10        // heater connected to this pin for PWM
 #define digitalHeaterPin 21       // heater also connected to this, but this pin doesn't support PWM. So make this pin an analog input
 #define PDPin            A0       // photodiode connected here
@@ -33,7 +33,7 @@ int LEDPins[]          = {2,3,4,5,6,7,8,9}; // leds connected to these pins. {CH
 
 
 // number of times to call setTempIter() for the delay between sample sets
-int numTempCycles_delay = 50; //(LED_SAMPLEPERIOD - LED_NUMLEDS * LED_LEDON) / (TEMP_DELAYBETWEENMEAS * TEMP_NUMTOAVERAGE);
+int numTempCycles_delay = 1000; //(LED_SAMPLEPERIOD - LED_NUMLEDS * LED_LEDON) / (TEMP_DELAYBETWEENMEAS * TEMP_NUMTOAVERAGE);
 // number of times to call setTempIter() for the delay between samples
 int numTempCycles_sample = 1; //(LED_SAMPLEPERIOD) / (TEMP_DELAYBETWEENMEAS * TEMP_NUMTOAVERAGE);
 
@@ -61,6 +61,7 @@ float fetchTemp() {
     float analogVal = (float) analogSum / (float) TEMP_NUMTOAVERAGE;
     float voltage = 5.0*analogVal/1023.0;
     float correctedTemp = (voltage - 0.5) / 0.01;
+    //Serial.println(correctedTemp);
     return correctedTemp;
 }
 
@@ -70,7 +71,7 @@ int setTempIter(int desTemp) {
     // returns 0 if not yet at temperature
     // returns 1 if at temperature within margin of error
     int currTemp = fetchTemp();
-    //Serial.print(currTemp);
+    //Serial.println(currTemp);
     //Serial.print(",");
     if ((int) currTemp < desTemp - TEMP_ALLOWEDERR) {
         int correction = (int) (desTemp - currTemp) * TEMP_PROPGAIN;
@@ -113,7 +114,7 @@ float sampleIntensity() {
         voltageSum += analogRead(PDPin);
         for (int i = 0; i < numTempCycles_sample; i++) { setTempIter(TEMP_DESTEMP); }
     }
-    float voltage = (float) voltageSum * 5.0/1023.0;
+    float voltage = (float) voltageSum * 5.0/ (1023.0 * (float) TEMP_NUMTOAVERAGE);
     return voltage;
 }
 
