@@ -1,0 +1,1 @@
+logs to SD card, requires V0.4 board

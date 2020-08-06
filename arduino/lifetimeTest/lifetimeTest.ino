@@ -17,7 +17,7 @@
 #define LED_NUMSAMPLES 10      // num analog samples to take for each LED
 
 // pinoute
-int LEDPins[]          = {9,8,7,6,5,4,3,2}; // leds connected to these pins. {CH1, CH2, ...}
+const int LEDPins[]          = {2,3,4,5,6,7,8,9}; // leds connected to these pins. {CH1, CH2, ...}
 #define heaterPin        10        // heater connected to this pin for PWM
 #define digitalHeaterPin 21       // heater also connected to this, but this pin doesn't support PWM. So make this pin an analog input
 #define PDPin            A0       // photodiode connected here
