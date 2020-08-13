@@ -254,11 +254,14 @@ void setup() {
       if (cromeStatus == 0) cromeStatus = 1;
       else cromeStatus = 0;
       changeLEDState(cromeStatus);
+      digitalWrite(sampleLED, cromeStatus);
       delay(50);
       while(digitalRead(cromeOnSw) == 0);
     }
   }
-
+  
+  digitalWrite(sampleLED, LOW);
+  changeLEDState(0);
   Serial.println("Starting temperature control and sampling...");
   File datafile = SD.open(filename, FILE_WRITE);
   datafile.print("Unix time (s),Temp (C),PD Offset (V),10V Rail Voltage(V),5V Rail Voltage (V),3.3V Rail Voltage (V),");
