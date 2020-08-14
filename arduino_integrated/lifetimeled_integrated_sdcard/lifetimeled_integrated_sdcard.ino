@@ -37,7 +37,7 @@ const int LEDPins[] = {2, 3, 4, 5, 6, 7, 8, 9}; // leds connected to these pins.
 #define startSw          29       // control switch
 
 // number of times to call setTempIter() for the delay between sample sets
-int numTempCycles_delay = 10;//00; //(LED_SAMPLEPERIOD - LED_NUMLEDS * LED_LEDON) / (TEMP_DELAYBETWEENMEAS * TEMP_NUMTOAVERAGE);
+int numTempCycles_delay = 1000;//00; //(LED_SAMPLEPERIOD - LED_NUMLEDS * LED_LEDON) / (TEMP_DELAYBETWEENMEAS * TEMP_NUMTOAVERAGE);
 // number of times to call setTempIter() for the delay between samples
 int numTempCycles_sample = 1; //(LED_SAMPLEPERIOD) / (TEMP_DELAYBETWEENMEAS * TEMP_NUMTOAVERAGE);
 
@@ -244,9 +244,19 @@ void setup() {
 
   Serial.println("Ready to sample");
   // first step: if cromeOnSw turns LOW, then turn CROMEs on. if startSw is ever pressed, then proceed to loop
+  int cromeStatus = 0;
   while (digitalRead(startSw) == 1) {
-    if (digitalRead(cromeOnSw) == 0) changeLEDState(1);
-    else changeLEDState(0);
+    Serial.print("PD Voltage: ");
+    //Serial.println(analogRead(A0));
+    Serial.println((float) analogRead(PDPin) * 3.3 / (1023.0));
+    delay(50);
+    if (digitalRead(cromeOnSw) == 0) { 
+      if (cromeStatus == 0) cromeStatus = 1;
+      else cromeStatus = 0;
+      changeLEDState(cromeStatus);
+      delay(50);
+      while(digitalRead(cromeOnSw) == 0);
+    }
   }
 
   Serial.println("Starting temperature control and sampling...");
@@ -260,7 +270,7 @@ void setup() {
   datafile.print("\n");
   datafile.close();
   digitalWrite(runLED, HIGH);
-  //setTemp(TEMP_DESTEMP);
+  setTemp(TEMP_DESTEMP);
 }
 
 void loop() {
