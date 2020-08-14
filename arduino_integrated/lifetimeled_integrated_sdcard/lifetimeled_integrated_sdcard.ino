@@ -12,7 +12,7 @@
 // temperature control parameters
 #define TEMP_NUMTOAVERAGE 10     // average 10 temp meas
 #define TEMP_DELAYBETWEENMEAS 10 // ms
-#define TEMP_PROPGAIN 40         // proportional control term with gain of 20
+#define TEMP_PROPGAIN 60         // proportional control term with gain of 20
 #define TEMP_ALLOWEDERR 3             // accurate within ALLOWEDER degrees
 #define TEMP_DESTEMP 103              // desirded temperature for LEDs
 // lifetime control parameters
@@ -82,6 +82,8 @@ float fetchTemp() {
   float analogVal = (float) analogSum / (float) TEMP_NUMTOAVERAGE;
   float voltage = 3.3 * analogVal / 1023.0;
   float correctedTemp = (voltage - 0.5) / 0.01;
+  Serial.print("Current Temp: ");
+  Serial.println(correctedTemp);
   return correctedTemp;
 }
 
